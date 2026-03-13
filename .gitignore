@@ -1,0 +1,16 @@
+# Vivado temporary files
+*.log
+*.jou
+*.str
+.Xil/
+*.pb
+*.jou
+
+# Project outputs
+*.runs/
+*.gen/
+*.ip_user_files/
+*.hw/
+*.cache/
+*.ioplanning/
+*.sim/
