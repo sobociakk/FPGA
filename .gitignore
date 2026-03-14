@@ -14,3 +14,11 @@
 *.cache/
 *.ioplanning/
 *.sim/
+
+xsim.dir/
+build/
+*.wdb
+*.sh
+*.str
+*.backup
+*.dir/
