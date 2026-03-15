@@ -1,10 +1,14 @@
-# Vivado temporary files
+# Vivado / Xilinx Junk
 *.log
 *.jou
 *.str
-.Xil/
 *.pb
-*.jou
+*.vcd
+*.wdb
+*.swp
+.Xil/
+xsim.dir/
+build/
 
 # Project outputs
 *.runs/
@@ -14,11 +18,3 @@
 *.cache/
 *.ioplanning/
 *.sim/
-
-xsim.dir/
-build/
-*.wdb
-*.sh
-*.str
-*.backup
-*.dir/
