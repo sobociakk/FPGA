@@ -20,6 +20,7 @@ module uart_tx_top # (
     ) BAUD_RATE_GEN (
         .clk_i(clk_i),
         .rst_ni(rst_ni),
+        .enable_i(!bus_i.ready),    // starts gen exactly when transmission begins
         .tick_o(baud_rate_w)
     );
 

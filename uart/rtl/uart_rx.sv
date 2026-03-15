@@ -3,19 +3,13 @@
 module uart_rx #(
    parameter int SB_TICK = 16   // oversampling ticks 
 )(
-    uart_rx_if.mac_mp bus_i,
-    
     input logic clk_i,
     input logic rst_ni,
     input logic baud_tick_i,
-    input logic rx_i
-);
+    input logic rx_i,
 
-logic [3:0] tick_cnt_q, tick_cnt_d;
-logic [2:0] bit_cnt_q, bit_cnt_d;
-logic [7:0] rx_data_q, rx_data_d;
-logic valid_q, valid_d;
-logic rx_sync_q, rx_sync_1_q;  
+    uart_rx_if.mac_mp bus_i
+);
 
 typedef enum logic [1:0] { 
     IDLE = 2'b00,
@@ -26,31 +20,32 @@ typedef enum logic [1:0] {
 
 state_e state_q, next_state_d;
 
-// dual ff synchronizer
-always_ff @(posedge clk_i, negedge rst_ni) begin
-    if(!rst_ni) begin 
-        rx_sync_1_q <= 1'b1;
-        rx_sync_q <= 1'b1;
-    end else begin
-        rx_sync_1_q <= rx_i;
-        rx_sync_q <= rx_sync_1_q;
-    end
-end
+logic [3:0] tick_cnt_q, tick_cnt_d;
+logic [2:0] bit_cnt_q, bit_cnt_d;
+logic [7:0] rx_data_q, rx_data_d;
+logic valid_q, valid_d;
+
+logic rx_meta_q, rx_sync_q;
 
 always_ff @(posedge clk_i, negedge rst_ni) begin
     if(!rst_ni) begin
+        rx_meta_q <= 1'b1;
+        rx_sync_q <= 1'b1;
+            
+        state_q <= IDLE;
         tick_cnt_q <= '0;
         bit_cnt_q <= '0;
         rx_data_q <= '0;
-        valid_q <= '0;
-        rx_data_q <= '0;
-        state_q <= IDLE;
+        valid_q <= 1'b0;
     end else begin
+        rx_meta_q <= rx_i;
+        rx_sync_q <= rx_meta_q;
+            
+        state_q <= next_state_d;
         tick_cnt_q <= tick_cnt_d;
         bit_cnt_q <= bit_cnt_d;
         rx_data_q <= rx_data_d;
         valid_q <= valid_d;
-        state_q <= next_state_d;
     end
 end
 

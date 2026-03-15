@@ -10,7 +10,7 @@ module fifo #(
     input logic [DATA_WIDTH-1:0] wr_data_i,
     input logic rd_en_i,
 
-    output logic rd_data_o,
+    output logic [DATA_WIDTH-1:0] rd_data_o,
     output logic full_o,
     output logic empty_o
 );

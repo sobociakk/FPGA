@@ -1,5 +1,2 @@
-// RTL files
-rtl/baud_rate_gen.sv
-
-// Testbench files
+-f rtl/rtl.f
 tb/tb_baud_rate_gen.sv

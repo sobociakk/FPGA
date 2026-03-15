@@ -1,5 +1,2 @@
-// RTL files
-rtl/uart_top.sv
-
-// Testbench files
+-f rtl/rtl.f
 tb/tb_uart_top.sv

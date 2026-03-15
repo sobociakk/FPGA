@@ -2,7 +2,6 @@
 
 module tb_baud_rate_gen;
     logic clk, rst_n, tick;
-
     integer cycle_count = 0;
 
     baud_rate_gen #(
@@ -45,13 +44,8 @@ module tb_baud_rate_gen;
         rst_n = 1'b1;
         #300;
 
-        $display("Simulation completed successfully!");
+        $display("[TB] Simulation completed successfully.");
         $finish;
-    end
-
-    initial begin
-        $dumpfile("waves.vcd"); 
-        $dumpvars(0, tb_baud_rate_gen);
     end
 
 endmodule

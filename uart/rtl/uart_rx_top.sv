@@ -1,8 +1,8 @@
 `timescale 1ns / 1ps
 
 module uart_rx_top #(
-    parameter int CLK_FREQ   = 100000000,
-    parameter int BAUD_RATE  = 9600,
+    parameter int CLK_FREQ = 100000000,
+    parameter int BAUD_RATE = 9600,
     parameter int FIFO_DEPTH = 16
 )(
     uart_rx_if.mac_mp bus_o, 
@@ -26,6 +26,7 @@ module uart_rx_top #(
     ) BAUD_GEN_UNIT (
         .clk_i(clk_i),
         .rst_ni(rst_ni),
+        .enable_i(1'b1),
         .tick_o(baud_tick_16x_w)
     );
 

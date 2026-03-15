@@ -11,31 +11,30 @@ module baud_rate_gen #(
     )(
         input logic clk_i,
         input logic rst_ni,
+        input logic enable_i,   // gen runs only when enabled
 
         output logic tick_o
     );
 
     localparam int MAX_COUNT = CLK_FREQ / BAUD_RATE;
-
-    int unsigned counter_q, counter_d;
+    int unsigned cycle_count;
 
     always_ff @(posedge clk_i, negedge rst_ni) begin
-        if(!rst_ni) begin 
-            counter_q <= '0;
-        end else begin 
-            counter_q <= counter_d;
-        end
-    end
+        if(!rst_ni) begin
+            cycle_count <= 0;
+            tick_o <= 1'b0;
+        end else if(!enable_i) begin
+            cycle_count <= 0;
+            tick_o <= 1'b0;
+        end else begin
+            cycle_count <= cycle_count + 1;
+            tick_o <= 1'b0;
 
-    always_comb begin
-        counter_d = counter_q;
-        tick_o = 1'b0;
-        if(counter_q == MAX_COUNT - 1) begin
-            counter_d = 0;
-            tick_o = 1'b1;
-        end else begin 
-            counter_d = counter_q + 1'b1;
+            if(cycle_count >= MAX_COUNT - 1) begin
+                tick_o <= 1'b1;
+                cycle_count <= 0;
+            end
         end
-    end
+    end 
 
 endmodule
