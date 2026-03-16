@@ -24,7 +24,8 @@ TB_FILELIST  = $(TB_DIR)/$(TB_NAME).f
 LINT_FLAGS = --lint-only -Wall -sv --top-module $(RTL_TOP)
 
 # Source files for dependency tracking
-SOURCES = $(shell find $(RTL_DIR) $(TB_DIR) -type f \( -name '*.v' -o -name '*.sv' \) 2>/dev/null) $(RTL_FILELIST) $(TB_FILELIST)
+RTL_SOURCES = $(shell find $(RTL_DIR) -type f \( -name '*.v' -o -name '*.sv' \) 2>/dev/null) $(wildcard $(RTL_FILELIST))
+TB_SOURCES  = $(shell find $(TB_DIR) -type f \( -name '*.v' -o -name '*.sv' \) 2>/dev/null) $(wildcard $(TB_FILELIST))
 
 # Dependency markers
 LINT_MARKER    = $(BUILD_DIR)/.lint.done
@@ -41,7 +42,7 @@ setup:
 # --- Linting ---
 lint: $(LINT_MARKER)
 
-$(LINT_MARKER): $(SOURCES) | setup
+$(LINT_MARKER): $(RTL_SOURCES) | setup
 	@echo "=== 1. Linting module: $(RTL_TOP) ==="
 	$(LINTER) $(LINT_FLAGS) -f $(RTL_FILELIST)
 	@touch $@
@@ -49,7 +50,7 @@ $(LINT_MARKER): $(SOURCES) | setup
 # --- Compilation ---
 compile: $(COMPILE_MARKER)
 
-$(COMPILE_MARKER): $(SOURCES) | setup
+$(COMPILE_MARKER): $(RTL_SOURCES) $(TB_SOURCES) | setup
 	@echo "=== 2. Compiling for: $(TB_NAME) ==="
 	$(XVLOG) -sv -f $(TB_FILELIST) -log $(BUILD_DIR)/xvlog.log
 	@touch $@

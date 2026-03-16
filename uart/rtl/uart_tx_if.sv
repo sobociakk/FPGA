@@ -1,5 +1,7 @@
 `timescale 1ns / 1ps
 
+/* verilator lint_off UNDRIVEN */
+
 interface uart_tx_if();
     logic valid;
     logic ready;
@@ -20,3 +22,5 @@ interface uart_tx_if();
     );     
     
 endinterface
+
+/* verilator lint_on UNDRIVEN */

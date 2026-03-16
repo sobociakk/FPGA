@@ -17,7 +17,15 @@ module rs232_top #(
     logic tx_ready_w;
     logic baud_tick_rx_w, baud_tick_tx_w;
 
-    assign tx_data_w = rx_data_w + 8'h20;
+    //assign tx_data_w = rx_data_w + 8'h20;
+
+    always_comb begin
+        if(rx_data_w >= 8'h41 && rx_data_w <= 8'h5A) begin
+            tx_data_w = rx_data_w + 8'h20;
+        end else begin
+            tx_data_w = rx_data_w;
+        end
+    end
 
     baud_rate_gen #(
         .CLK_FREQ(CLK_FREQ),
@@ -62,3 +70,4 @@ module rs232_top #(
     );
 
 endmodule
+

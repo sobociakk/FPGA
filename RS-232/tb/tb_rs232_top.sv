@@ -2,8 +2,8 @@
 
 module tb_rs232_top();
 
-    localparam int CLK_FREQ    = 100_000_000;
-    localparam int BAUD_RATE   = 9600;
+    localparam int CLK_FREQ = 100_000_000;
+    localparam int BAUD_RATE = 9600;
     localparam time BIT_PERIOD = 1s / BAUD_RATE; 
 
     logic clk = 0;
@@ -13,19 +13,19 @@ module tb_rs232_top();
     
     int error_count = 0;
 
-    always #5ns clk = ~clk;
-
     rs232_top #(
         .CLK_FREQ(CLK_FREQ),
         .BAUD_RATE(BAUD_RATE)
-    ) uut (
+    ) DUT (
         .clk_i(clk),
         .rst_i(rst),
         .RXD_i(rxd),
         .TXD_o(txd)
     );
 
-    task automatic send_uart_char(input [7:0] data);
+    always #5ns clk = ~clk;
+
+    task automatic send_rs232_char(input [7:0] data);
         rxd = 0; 
         #(BIT_PERIOD);
         for (int i = 0; i < 8; i++) begin
@@ -36,7 +36,7 @@ module tb_rs232_top();
         #(BIT_PERIOD);
     endtask
 
-    task automatic verify_uart_char(input [7:0] expected_char);
+    task automatic verify_rs232_char(input [7:0] expected_char);
         logic [7:0] captured_data;
         
         wait(txd == 0);
@@ -66,16 +66,16 @@ module tb_rs232_top();
         $display("--------------------------------------------------");
         
         rst = 1;
-        #200ns;
+        repeat(20) @(posedge clk);
         rst = 0;
-        #1us;
+        repeat(100) @(posedge clk);
 
         for (logic [7:0] char = 8'h41; char <= 8'h5A; char++) begin
             fork
-                send_uart_char(char);
-                verify_uart_char(char + 8'h20); 
+                send_rs232_char(char);
+                verify_rs232_char(char + 8'h20); 
             join
-            #100us; 
+            repeat(1000) @(posedge clk); 
         end
 
         $display("--------------------------------------------------");

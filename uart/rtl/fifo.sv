@@ -43,7 +43,7 @@ always_comb begin
     rd_ptr_d = rd_ptr_q;
     count_d = count_q;
 
-    full_o = (count_q == DEPTH);
+    full_o = (count_q == ($bits(count_q))'(DEPTH));
     empty_o = (count_q == '0);
 
     rd_data_o = mem_q[rd_ptr_q];

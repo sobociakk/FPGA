@@ -23,10 +23,9 @@ module tb_uart_rx_top;
         .rx_i(rx_serial_in)
     );
 
-    initial begin
-        clk = 1'b0;
-        forever #5 clk = ~clk;
-    end
+    initial clk = 1'b0;
+    always #5 clk = ~clk;
+    
 
     // ================================================================
     // TASK: Virtual Transmitter (generates serial signal on the wire)
@@ -56,9 +55,9 @@ module tb_uart_rx_top;
         rx_serial_in = 1'b1;
         rx_if.ready = 1'b0;
 
-        #20;
+        repeat(2) @(posedge clk);
         rst_n = 1'b1;
-        #20;
+        repeat(2) @(posedge clk);
 
         $display("========================================");
         $display("[TB] Starting UART RX receiver test (+ FIFO)");

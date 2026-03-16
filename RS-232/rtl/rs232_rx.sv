@@ -1,8 +1,6 @@
 `timescale 1ns / 1ps
 
-module rs232_rx #(
-    parameter int SB_TICK = 16
-) (
+module rs232_rx(
     input logic clk_i,
     input logic rst_i,
     input logic baud_tick_i,
@@ -106,7 +104,9 @@ always_comb begin
         STOP : begin
             if(baud_tick_i == 1'b1) begin
                 if(tick_cnt_q == 4'd15) begin
-                    valid_d = 1'b1;
+                    if(rx_sync_q == 1'b1) begin
+                        valid_d = 1'b1;
+                    end
                     next_state_d = IDLE;
                 end else begin 
                     tick_cnt_d = tick_cnt_q + 1'b1;

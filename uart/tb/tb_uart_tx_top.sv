@@ -21,19 +21,18 @@ module tb_uart_tx_top;
         .tx_o(tx_serial_out)
     );
 
-    initial begin
-        clk = 1'b0;
-        forever #5 clk = ~clk;
-    end
+    initial clk = 1'b0;
+    always #5 clk = ~clk;
+    
 
     initial begin
         rst_n = 1'b0;
         tx_if.valid = 1'b0;
         tx_if.data = 8'h00;
         
-        #20;
+        repeat(2) @(posedge clk);
         rst_n = 1'b1;
-        #20;
+        repeat(2) @(posedge clk);
         
         $display("========================================");
         $display("[TB] Starting UART TX transmitter test.");

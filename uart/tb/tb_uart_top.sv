@@ -92,10 +92,9 @@ module tb_uart_top;
         $display("[TB] Task: Finished checking RX stream.");
     endtask
 
-    initial begin
-        clk = 1'b0;
-        forever #5 clk = ~clk;
-    end
+    initial clk = 1'b0;
+    always #5 clk = ~clk;
+
 
     // =========================================================
     // MAIN TEST THREAD (Host Processor)
@@ -111,7 +110,7 @@ module tb_uart_top;
         rx_if.ready = 1'b0;
         error_cnt = 0;
         
-        #20 rst_n = 1'b1; #20;
+        repeat(2) @(posedge clk) rst_n = 1'b1; repeat(2) @(posedge clk);
 
         $display("==================================================");
         $display("[TB] STARTING TRANSACTION-LEVEL LOOPBACK TEST");
@@ -156,7 +155,7 @@ module tb_uart_top;
         rx_if.ready = 1'b0;
         error_cnt = 0;
         
-        #50 rst_n = 1'b1;
+        repeat(5) @(posedge clk) rst_n = 1'b1;
         repeat(10) @(posedge clk);
 
         $display("==================================================");

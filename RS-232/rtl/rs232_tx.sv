@@ -22,24 +22,29 @@ state_e state_q, next_state_d;
 
 logic [7:0] tx_data_q, tx_data_d;
 logic [2:0] bit_cnt_q, bit_cnt_d;
+logic tx_q, tx_d;
 
 always_ff @(posedge clk_i, posedge rst_i) begin
     if(rst_i) begin
         tx_data_q <= '0;
         bit_cnt_q <= '0;
         state_q <= IDLE;
+        tx_q <= 1'b1;
     end else begin
         tx_data_q <= tx_data_d;
         bit_cnt_q <= bit_cnt_d;
         state_q <= next_state_d;
+        tx_q <= tx_d;
     end
 end
+
+assign tx_o = tx_q;
 
 always_comb begin 
     tx_data_d = tx_data_q;
     bit_cnt_d = bit_cnt_q;
     next_state_d = state_q;
-    tx_o = 1'b1;
+    tx_d = 1'b1;
     ready_o = (state_q == IDLE);
 
     case (state_q)
@@ -52,14 +57,14 @@ always_comb begin
         end 
 
         START : begin
-            tx_o = 1'b0;
+            tx_d = 1'b0;
             if(baud_tick_i == 1'b1) begin
                 next_state_d = DATA;
             end
         end 
 
         DATA : begin
-            tx_o = tx_data_q[0];
+            tx_d = tx_data_q[0];
             if(baud_tick_i == 1'b1) begin
                 tx_data_d = tx_data_q >> 1;
                 if(bit_cnt_q == 3'd7) begin 

@@ -10,9 +10,6 @@ module uart_tx(
     output logic tx_o
     );
 
-    logic [7:0] tx_data_d, tx_data_q;  // data to send
-    logic [2:0] bit_cnt_d, bit_cnt_q;  // data counter
-
     // FSM
     typedef enum logic [1:0] { 
         IDLE = 2'b00,
@@ -23,24 +20,32 @@ module uart_tx(
 
     state_e state_q, next_state_d;
 
+    logic [7:0] tx_data_d, tx_data_q;  // data to send
+    logic [2:0] bit_cnt_d, bit_cnt_q;  // data counter
+    logic tx_d, tx_q;
+
     always_ff @(posedge clk_i, negedge rst_ni) begin
         if(!rst_ni) begin
             tx_data_q <= '0;
             bit_cnt_q <= '0;
             state_q <= IDLE;
+            tx_q <= 1'b1;
         end else begin
             state_q <= next_state_d;
             tx_data_q <= tx_data_d;
             bit_cnt_q <= bit_cnt_d;
+            tx_q <= tx_d;
         end
     end
+
+    assign tx_o = tx_q;
 
     always_comb begin
         next_state_d = state_q;
         tx_data_d = tx_data_q;
         bit_cnt_d = bit_cnt_q;
         bus_i.ready = (state_q == IDLE);
-        tx_o = 1'b1;
+        tx_d = 1'b1;
 
         case(state_q)
             IDLE: begin
@@ -52,14 +57,14 @@ module uart_tx(
             end
 
             START: begin
-                tx_o = 1'b0;
+                tx_d = 1'b0;
                 if(baud_tick_i == 1'b1) begin
                     next_state_d = DATA;
                 end
             end
 
             DATA: begin
-                tx_o = tx_data_q[0];
+                tx_d = tx_data_q[0];
                 if(baud_tick_i == 1'b1) begin
                     tx_data_d = tx_data_q >> 1;
                     if(bit_cnt_q == 3'd7) begin
