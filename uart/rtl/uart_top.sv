@@ -2,7 +2,7 @@
 
 module uart_top #(
     parameter int CLK_FREQ = 100_000_000,
-    parameter int BAUD_RATE = 115200,
+    parameter int BAUD_RATE = 9600,
     parameter int FIFO_DEPTH = 16
 )(
     input logic clk_i,

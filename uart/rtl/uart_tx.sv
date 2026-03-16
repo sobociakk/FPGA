@@ -61,10 +61,11 @@ module uart_tx(
             DATA: begin
                 tx_o = tx_data_q[0];
                 if(baud_tick_i == 1'b1) begin
-                tx_data_d = tx_data_q >> 1;
-                bit_cnt_d = bit_cnt_q + 1'b1;
+                    tx_data_d = tx_data_q >> 1;
                     if(bit_cnt_q == 3'd7) begin
                         next_state_d = STOP;
+                    end else begin
+                        bit_cnt_d = bit_cnt_q + 1'b1;
                     end
                 end
             end
