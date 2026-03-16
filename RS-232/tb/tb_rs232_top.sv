@@ -59,7 +59,7 @@ module tb_rs232_top();
         
         #(BIT_PERIOD);
     endtask
--
+    
     initial begin
         $display("--------------------------------------------------");
         $display("STARTING FULL ALPHABET RS232 TEST (A-Z)");
