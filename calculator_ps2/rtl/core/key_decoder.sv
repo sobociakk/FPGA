@@ -48,10 +48,10 @@ module key_decoder(
                             8'h3D: begin is_digit = 1'b1; digit_val = 4'd7; end 
                             8'h3E: begin is_digit = 1'b1; digit_val = 4'd8; end 
                             8'h46: begin is_digit = 1'b1; digit_val = 4'd9; end 
-                            8'h79: is_plus  = 1'b1; // '+'
-                            8'h7B: is_minus = 1'b1; // '-' 
+                            8'h79: is_plus  = 1'b1; 
+                            8'h7B: is_minus = 1'b1; 
                             8'h5A: is_equal = 1'b1; // Enter ('=')
-                            8'h76: is_esc   = 1'b1; // ESC
+                            8'h76: is_esc   = 1'b1; 
                             default: key_valid = 1'b0;
                         endcase
                     end
