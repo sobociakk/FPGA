@@ -1,3 +1,5 @@
+`timescale 1ns / 1ps
+
 module key_decoder(
     input logic clk_i,
     input logic rst_i,
@@ -18,7 +20,7 @@ module key_decoder(
 
     always_ff @(posedge clk_i or posedge rst_i) begin
         if(rst_i) state_q <= NORMAL;
-        else if(rx_done_tick) state_q <= state_d;
+        else state_q <= state_d;
     end
 
     always_comb begin
