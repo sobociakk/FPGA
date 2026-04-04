@@ -1,13 +1,16 @@
 `timescale 1ns / 1ps
 
-module top(
-    input logic clk,      
-    input logic btnC,     
-    input logic PS2Clk,    
-    input logic PS2Data,   
+module top #(
+    parameter CLK_FREQ = 100_000_000,
+    parameter CYCLES_1KHZ = 100_000
+)(
+    input logic clk,
+    input logic btnC,
+    input logic PS2Clk,
+    input logic PS2Data,
 
-    output logic [6:0] seg, 
-    output logic [3:0] an   
+    output logic [6:0] seg,
+    output logic [3:0] an
 );
 
     logic rx_done_tick;
@@ -25,7 +28,7 @@ module top(
     logic [1:0] alu_op;
     logic [15:0] display_val;
 
-    ps2_rx #(.CLK_FREQ(100_000_000)) PS2_RX(
+    ps2_rx #(.CLK_FREQ(CLK_FREQ)) PS2_RX(
         .clk_i(clk),
         .rst_i(btnC),
         .ps2_clk(PS2Clk),
@@ -72,7 +75,7 @@ module top(
         .alu_result(alu_result)
     );
 
-    display #(.CYCLES_1KHZ(100_000)) DISPLAY(
+    display #(.CYCLES_1KHZ(CYCLES_1KHZ)) DISPLAY(
         .clk_i(clk),
         .rst_i(btnC),
         .display_val(display_val),

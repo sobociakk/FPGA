@@ -10,6 +10,11 @@ module ps2_rx #(parameter CLK_FREQ = 100_000_000)(
     output logic [7:0] rx_data
 );
 
+    // PS/2 Clock 10-20kHz (recommended 15kHz), MAX = 33kHz
+    // 50-100 us cycle -> filter = cycle / 2 * 5-10%
+    // tx time approx. 1ms -> timeout > tx time
+    // the timeout is a watchdog that triggers if the tx doesnt finish
+
     localparam FILTER_MAX = (CLK_FREQ / 1_000_000) * 2;     // 2us
     localparam TIMEOUT_MAX = (CLK_FREQ / 1_000) * 3 / 2;    // 1.5ms
 
@@ -48,7 +53,6 @@ module ps2_rx #(parameter CLK_FREQ = 100_000_000)(
      end
 
     logic fall_edge;
-    //assign fall_edge = ps2c_sync_q[1] & ~ps2c_sync_q[0];
     assign fall_edge = filter_clk_dly & ~filter_clk_q;
 
     typedef enum logic {

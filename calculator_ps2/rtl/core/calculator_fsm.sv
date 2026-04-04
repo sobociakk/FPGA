@@ -78,17 +78,30 @@ module calculator_fsm (
                             arg2_d = {arg2_q[11:0], digit_val};
                         end else if(is_equal) begin
                             state_d = RESULT;
+                        end else if(is_plus || is_minus) begin
+                            arg1_d = alu_result;
+                            arg2_d = '0;
+                            if(is_plus) op_d = 2'b01;
+                            if(is_minus) op_d = 2'b10;
                         end
                     end
                 end
 
                 RESULT: begin
                     display_val = alu_result; 
-                    if(key_valid && is_digit) begin
-                        state_d = ARG1;
-                        arg1_d = {12'b0, digit_val};
-                        arg2_d = '0;
-                        op_d = '0;
+                    if(key_valid) begin
+                        if(is_digit) begin
+                            state_d = ARG1;
+                            arg1_d = {12'b0, digit_val};
+                            arg2_d = '0;
+                            op_d = '0;
+                        end else if(is_plus || is_minus) begin
+                            state_d = ARG2;
+                            arg1_d = alu_result;
+                            arg2_d = '0;
+                            if(is_plus) op_d = 2'b01;
+                            if(is_minus) op_d = 2'b10;
+                        end
                     end
                 end
                 
@@ -100,5 +113,4 @@ module calculator_fsm (
     assign alu_arg1 = arg1_q;
     assign alu_arg2 = arg2_q;
     assign alu_op = op_q;
-
 endmodule

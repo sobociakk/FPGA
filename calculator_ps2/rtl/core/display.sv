@@ -77,6 +77,10 @@ module display #(parameter CYCLES_1KHZ = 100_000)(
             4'h7: seg_comb = 7'b1111000;
             4'h8: seg_comb = 7'b0000000;
             4'h9: seg_comb = 7'b0010000;
+            4'hA: seg_comb = 7'b0111111; // '-'
+            4'hC: seg_comb = 7'b0101111; // 'r'
+            4'hE: seg_comb = 7'b0000110; // 'E'
+            4'hF: seg_comb = 7'b1111111; // Blank
             default: seg_comb = 7'b1111111;
         endcase
     end
