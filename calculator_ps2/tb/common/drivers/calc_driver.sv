@@ -14,9 +14,10 @@ class calc_driver;
         8'h79, 8'h7B, 8'h5A, 8'h76           // +, -, Enter(=), ESC
     };
 
-    localparam int IDX_PLUS = 10;
+    localparam int IDX_PLUS  = 10;
     localparam int IDX_MINUS = 11;
     localparam int IDX_ENTER = 12;
+    localparam int IDX_ESC   = 13;
 
     function new(virtual calc_if vif);
         this.vif = vif;
@@ -97,4 +98,8 @@ class calc_driver;
         enter_number(tx.arg2);
         press_key(SC[IDX_ENTER]);
     endtask
+    task press_esc();
+        press_key(SC[IDX_ESC]);
+    endtask
+
 endclass
